@@ -1,6 +1,5 @@
 import os
-from google import genai
-
+import google.generativeai as genai
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def read_project():
@@ -28,7 +27,7 @@ CODE:
 {code}
 """
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model = genai.GenerativeModel("gemini-2.5-flash-lite")
         contents=prompt
     )
     return response.text

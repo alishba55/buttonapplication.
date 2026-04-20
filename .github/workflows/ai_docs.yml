@@ -17,7 +17,9 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: pip install google-genai
+        run: |
+          pip install google-generativeai
+        
 
       - name: Run AI Docs Generator
         env:
