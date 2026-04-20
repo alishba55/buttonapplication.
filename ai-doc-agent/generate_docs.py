@@ -1,6 +1,10 @@
 import os
 import google.generativeai as genai
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+model = genai.GenerativeModel("gemini-2.5-flash-lite")
+
 
 def read_project():
     code = ""
@@ -12,6 +16,7 @@ def read_project():
                     code += f"\n\nFILE: {path}\n"
                     code += file.read()
     return code
+
 
 def generate_docs(code):
     prompt = f"""
@@ -26,11 +31,9 @@ Analyze this Flutter project and generate documentation:
 CODE:
 {code}
 """
-    response = client.models.generate_content(
-        model = genai.GenerativeModel("gemini-2.5-flash-lite")
-        contents=prompt
-    )
+    response = model.generate_content(prompt)
     return response.text
+
 
 if __name__ == "__main__":
     code = read_project()
