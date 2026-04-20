@@ -1,1 +1,33 @@
+name: AI Documentation Agent
 
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install google-generativeai
+
+      - name: Run AI Docs Generator
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python ai-doc-agent/generate_docs.py
+
+      - name: Commit docs
+        run: |
+          git config --global user.name "AI Doc Bot"
+          git config --global user.email "bot@ai.com"
+          git add DOCUMENTATION.md
+          git commit -m "auto docs update" || echo "no changes"
+          git push
